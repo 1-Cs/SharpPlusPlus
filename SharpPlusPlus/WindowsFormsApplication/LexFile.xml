@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--
+
+-->
+<Lexer>
+  <Lex name="base" type="buildin">
+<![CDATA[
+
+LEX = {
+COMMENT=#
+delimiterChar=+*:=|-[]^
+beginChar='
+beginString="
+escapeChar=\
+stringChar^=\'"
+upper[]=A-Z
+lower[]=a-z
+whiteChar\=\t \n\v\f
+whitespace:=whiteChar+
+identifierChar:=upper|lower
+identifier:=identifierChar+
+delimiter:=delimiterChar
+charDef:=beginChar [ stringChar | escapeChar beginChar ]* stringChar beginChar
+stringMiddle:=[ stringChar | escapeChar beginString | escapeChar stringChar | escapeChar beginChar | escapeChar escapeChar ]
+stringFull:=beginString stringMiddle* stringChar beginString
+stringEmpty:=beginString beginString
+stringDef:=stringEmpty | stringFull
+EXPORT:=identifier delimiter charDef stringDef EOS
+}
+
+]]>
+  </Lex>
+  <Lex name="preset" type="base">
+    <![CDATA[
+    LEX ::= exports chardef,identifier, delimiter, EOS{
+  chardef := '\'' [stringChar | '\\' '\'' ]* stringChar '\'';
+  identifier :=  identifierChar+;
+  stringChar := ^'\\' ;
+  identifierChar := [ upper | lower ];
+  upper := ['A' - 'Z' ];
+  lower := ['a' - 'z'];
+  delimiter := ':' 
+
+}
+    ]]>
+  </Lex>
+</Lexer>
